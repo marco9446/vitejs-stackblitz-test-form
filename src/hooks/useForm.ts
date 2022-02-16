@@ -25,8 +25,8 @@ interface HandleChangeOptions {
 
 interface UseFormOptions<T> {
   validations?: Validations<T>;
-  initialValues?: T;
-  onSubmit?: VoidFunction;
+  initialValues: T;
+  onSubmit: (data: T) => void;
 }
 
 // CODE
@@ -44,7 +44,7 @@ interface UseFormOptions<T> {
 export const useForm = <T extends Record<keyof T, any> = {}>(
   options: UseFormOptions<T>
 ) => {
-  const [formData, setFormData] = useState<T>(options?.initialValues);
+  const [formData, setFormData] = useState<T>(options.initialValues);
   const [formErrors, setFormErrors] = useState<ErrorRecord<T>>({});
 
   /**
@@ -54,8 +54,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
    * @returns
    */
   const handleChange =
-    (key: string, changeOptions?: HandleChangeOptions) =>
-    (e: React.FormEvent<HTMLInputElement>) => {
+    (key: string, changeOptions?: HandleChangeOptions) => (e: any) => {
       const {
         targetAttribute = 'value',
         sanitizeFn,
@@ -81,7 +80,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
     const isValid = _validate();
     if (isValid) {
       if (options?.onSubmit) {
-        options.onSubmit();
+        options.onSubmit(formData);
       }
     } else {
       console.warn('Form not valid');
@@ -92,7 +91,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
    * Reset form data and error
    */
   const resetForm = () => {
-    setFormData(options?.initialValues);
+    setFormData(options.initialValues);
     setFormErrors({});
   };
 

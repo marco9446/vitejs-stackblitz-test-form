@@ -1,15 +1,29 @@
 import { ReactNode } from 'react';
 import Select from 'react-select';
 
-type FormInputType = {
-  type: string;
-  onChange: any;
-  placeholder: string | ReactNode;
-  value: any;
-  className?: string;
-  error: any;
-  selectItems?: any;
-};
+type FormInputType = (
+  | {
+      type: 'text' | 'email' | 'password';
+      selectItems?: undefined;
+      onChange: Function;
+      placeholder?: string;
+      value: string;
+    }
+  | {
+      type: 'checkbox';
+      selectItems?: undefined;
+      onChange: Function;
+      placeholder?: ReactNode;
+      value: boolean;
+    }
+  | {
+      type: 'selectFromMap' | 'multiSelectFromMap';
+      selectItems?: any;
+      onChange: any;
+      placeholder?: ReactNode;
+      value: any;
+    }
+) & { className?: string; error: ReactNode };
 
 const FormInput = ({
   type = 'text',
@@ -46,38 +60,6 @@ const FormInput = ({
           />
           {placeholder}
         </label>
-        {error && <p className="text-state-alarm">{error}</p>}
-      </div>
-    );
-
-  if (type == 'select')
-    return (
-      <div className="my-2">
-        <div className="inline-block relative ">
-          <select
-            onChange={onChange}
-            defaultValue={value}
-            className="brk-input-select"
-          >
-            <option value="DEFAULT" disabled>
-              {placeholder}
-            </option>
-            {selectItems.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
-        </div>
         {error && <p className="text-state-alarm">{error}</p>}
       </div>
     );

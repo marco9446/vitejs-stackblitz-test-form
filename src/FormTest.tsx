@@ -4,73 +4,75 @@ import { useForm } from './hooks/useForm';
 const FormTest = () => {
   const { errors, formData, handleChange, handleSubmit, resetForm } = useForm({
     validations: {
-      text1: {
-        required: { value: true, message: 'Text is required' },
+      email: {
+        required: { value: true, message: 'email is required' },
       },
-      check1: {
-        required: { value: true, message: 'Checkbox is required' },
+      password: {
+        required: { value: true, message: 'password is required' },
       },
-      select1: {
-        required: { value: true, message: 'Select1 is required' },
+      country: {
+        required: { value: true, message: 'country is required' },
       },
-      multiSelect1: {
-        required: { value: true, message: 'Multy is required' },
+      termsAndConditions: {
+        required: { value: true, message: 'termsAndConditions is required' },
       },
     },
     initialValues: {
-      text1: '',
-      check1: false,
-      select1: {},
-      multiSelect1: [],
+      email: '',
+      password: '',
+      confirmPassword: '',
+      first_name: '',
+      last_name: '',
+      phone: '',
+      company: '',
+      country: null,
+      termsAndConditions: false,
     },
-    onSubmit: () => {
-      console.log('submit');
+    onSubmit: (a) => {
+      console.log('submit', a);
     },
   });
   return (
     <main>
       <form onSubmit={handleSubmit}>
         <FormInput
-          type="text"
-          onChange={handleChange('text1')}
-          error={errors.text1}
-          placeholder={'text1'}
-          value={formData.text1}
+          type="email"
+          onChange={handleChange('email')}
+          error={errors.email}
+          placeholder={'email'}
+          value={formData.email}
         />
-
         <FormInput
-          type="checkbox"
-          onChange={handleChange('check1', { targetAttribute: 'checked' })}
-          error={errors.check1}
-          placeholder={'checkbox'}
-          value={formData.check1}
+          type="password"
+          onChange={handleChange('password')}
+          error={errors.password}
+          placeholder={'password'}
+          value={formData.password}
         />
-
         <FormInput
           type="selectFromMap"
-          onChange={handleChange('select1', { rawInput: true })}
-          error={errors.select1}
-          placeholder={'Select'}
+          onChange={handleChange('country', { rawInput: true })}
+          error={errors.country}
+          placeholder="country"
+          value={formData.country}
           selectItems={[
-            { label: 'a', value: 'a' },
-            { label: 'b', value: 'b' },
+            { label: 'italy', value: 'ita' },
+            { label: 'switzerland', value: 'ch' },
           ]}
-          value={formData.select1}
         />
-
         <FormInput
-          className="my-3"
-          type="multiSelectFromMap"
-          onChange={handleChange('multiSelect1', {
-            rawInput: true,
+          type="checkbox"
+          onChange={handleChange('termsAndConditions', {
+            targetAttribute: 'checked',
           })}
-          error={errors.multiSelect1}
-          placeholder={'multiSelect1'}
-          selectItems={[
-            { label: 'a', value: 'a' },
-            { label: 'b', value: 'b' },
-          ]}
-          value={formData.multiSelect1}
+          error={errors.termsAndConditions}
+          placeholder={
+            <span>
+              {'terms andcond'}:
+              <span className="brk-link text-black ml-1">link</span>
+            </span>
+          }
+          value={formData.termsAndConditions}
         />
 
         {/* BUTTONS */}
