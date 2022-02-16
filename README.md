@@ -1,3 +1,3 @@
-# vitejs-vite-jndvb7
+# Test
 
 [Edit on StackBlitz ⚡️](https://stackblitz.com/edit/vitejs-vite-jndvb7)
