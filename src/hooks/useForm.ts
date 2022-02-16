@@ -19,6 +19,7 @@ interface Validation {
 }
 interface HandleChangeOptions {
   targetAttribute?: string;
+  rawInput?: boolean;
   sanitizeFn?: (value: any) => any;
 }
 
@@ -55,10 +56,13 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
   const handleChange =
     (key: string, changeOptions?: HandleChangeOptions) =>
     (e: React.FormEvent<HTMLInputElement>) => {
-      const { targetAttribute = 'value', sanitizeFn } = changeOptions || {};
-      const value = sanitizeFn
-        ? sanitizeFn(e.target[targetAttribute])
-        : e.target[targetAttribute];
+      const {
+        targetAttribute = 'value',
+        sanitizeFn,
+        rawInput = false,
+      } = changeOptions || {};
+      const param = rawInput ? e : e.target[targetAttribute];
+      const value = sanitizeFn ? sanitizeFn(param) : param;
       setFormData((data) => {
         const newFormData = {
           ...data,
@@ -92,6 +96,26 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
     setFormErrors({});
   };
 
+  const _checkValidityRequiredValue = (value: any) => {
+    switch (typeof value) {
+      case 'undefined':
+        return false;
+      case 'boolean':
+        return value;
+      case 'number':
+      case 'string':
+        return !!value;
+      default:
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        }
+        if (value === null) {
+          return false;
+        }
+        return Object.keys(value).length;
+    }
+  };
+
   const _validate = (updatedValue?: any) => {
     let valid = true;
     const newErrors: ErrorRecord<T> = {};
@@ -101,7 +125,15 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
       // the matching validation rule for this key
       const validation = options.validations[key];
       // REQUIRED
-      if (validation?.required?.value && !value) {
+      console.log({
+        key,
+        validation,
+        value,
+        valueType: typeof value,
+        validityFlag: validation?.required?.value && true,
+        validityValue: !value && true,
+      });
+      if (validation?.required?.value && !_checkValidityRequiredValue(value)) {
         valid = false;
         newErrors[key] = validation?.required?.message;
       }
@@ -119,6 +151,7 @@ export const useForm = <T extends Record<keyof T, any> = {}>(
       }
     }
 
+    console.log({ newErrors });
     setFormErrors(newErrors);
     return valid;
   };

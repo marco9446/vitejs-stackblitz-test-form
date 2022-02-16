@@ -5,19 +5,22 @@ const FormTest = () => {
   const { errors, formData, handleChange, handleSubmit, resetForm } = useForm({
     validations: {
       text1: {
-        required: { value: true, message: 'Is required' },
+        required: { value: true, message: 'Text is required' },
       },
       check1: {
-        required: { value: true, message: 'Is required' },
+        required: { value: true, message: 'Checkbox is required' },
       },
       select1: {
-        required: { value: true, message: 'Is required' },
+        required: { value: true, message: 'Select1 is required' },
+      },
+      multiSelect1: {
+        required: { value: true, message: 'Multy is required' },
       },
     },
     initialValues: {
       text1: '',
       check1: false,
-      select1: [],
+      select1: {},
       multiSelect1: [],
     },
     onSubmit: () => {
@@ -45,7 +48,7 @@ const FormTest = () => {
 
         <FormInput
           type="selectFromMap"
-          onChange={handleChange('select1')}
+          onChange={handleChange('select1', { rawInput: true })}
           error={errors.select1}
           placeholder={'Select'}
           selectItems={[
@@ -58,7 +61,9 @@ const FormTest = () => {
         <FormInput
           className="my-3"
           type="multiSelectFromMap"
-          onChange={handleChange('select1')}
+          onChange={handleChange('multiSelect1', {
+            rawInput: true,
+          })}
           error={errors.multiSelect1}
           placeholder={'multiSelect1'}
           selectItems={[
@@ -68,15 +73,16 @@ const FormTest = () => {
           value={formData.multiSelect1}
         />
 
+        {/* BUTTONS */}
         <div className="flex gap-2 mt-3">
           <button
-            className="px-4 py-1 bg-indigo-400 text-indigo-100 rounded"
+            className="px-4 py-1 bg-indigo-400 text-indigo-100 rounded hover:bg-indigo-300"
             type="submit"
           >
             submit
           </button>
           <button
-            className="px-4 py-1 border border-indigo-400 text-indigo-400 rounded"
+            className="px-4 py-1 border border-indigo-400 text-indigo-400 rounded hover:bg-indigo-50"
             type="reset"
             onClick={() => resetForm()}
           >
@@ -84,6 +90,10 @@ const FormTest = () => {
           </button>
         </div>
       </form>
+      {/* JSON */}
+      <pre className="text-sm">
+        <code>{JSON.stringify({ formData, errors }, null, 2)}</code>
+      </pre>
     </main>
   );
 };

@@ -105,7 +105,7 @@ const FormInput = ({
           className={className}
           options={selectItems}
           placeholder={placeholder}
-          onChange={(values, action) => onChange}
+          onChange={onChange}
           isMulti={true}
         />
         {error && <p className="text-state-alarm">{error}</p>}
