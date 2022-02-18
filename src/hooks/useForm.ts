@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // TYPES
 type ErrorRecord<T> = Partial<Record<keyof T, string>>;
@@ -26,6 +26,7 @@ interface HandleChangeOptions {
 interface UseFormOptions<T> {
   validations?: Validations<T>;
   initialValues: T;
+  useObserver?: boolean;
   onSubmit: (data: T) => void;
 }
 
@@ -44,9 +45,17 @@ interface UseFormOptions<T> {
 export const useForm = <T extends Record<keyof T, any> = {}>(
   options: UseFormOptions<T>
 ) => {
+  const dep = Object.values(options.initialValues).toString();
+
   const [formData, setFormData] = useState<T>(options.initialValues);
   const [formErrors, setFormErrors] = useState<ErrorRecord<T>>({});
 
+  if (options.useObserver) {
+    useEffect(() => {
+      console.log('resetInitVal');
+      setFormData(options.initialValues);
+    }, [dep]);
+  }
   /**
    * Function used to update the state of each input field
    * @param key name of the key in the formData object to update

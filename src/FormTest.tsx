@@ -1,39 +1,54 @@
+import { useMemo, useState } from 'react';
 import FormInput from './components/FormInput';
 import { useForm } from './hooks/useForm';
 
 const FormTest = () => {
-  const { errors, formData, handleChange, handleSubmit, resetForm } = useForm({
-    validations: {
-      email: {
-        required: { value: true, message: 'email is required' },
+  const [email, setEmail] = useState('');
+
+  const memoed = useMemo(() => {
+    return {
+      validations: {
+        email: {
+          required: { value: true, message: 'email is required' },
+        },
+        password: {
+          required: { value: true, message: 'password is required' },
+        },
+        country: {
+          required: { value: true, message: 'country is required' },
+        },
+        termsAndConditions: {
+          required: { value: true, message: 'termsAndConditions is required' },
+        },
       },
-      password: {
-        required: { value: true, message: 'password is required' },
+      initialValues: {
+        email: email,
+        password: '',
+        confirmPassword: '',
+        first_name: '',
+        last_name: '',
+        phone: '',
+        company: '',
+        country: null,
+        termsAndConditions: false,
       },
-      country: {
-        required: { value: true, message: 'country is required' },
+      useObserver: false,
+      onSubmit: (a) => {
+        console.log('submit', a);
       },
-      termsAndConditions: {
-        required: { value: true, message: 'termsAndConditions is required' },
-      },
-    },
-    initialValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-      first_name: '',
-      last_name: '',
-      phone: '',
-      company: '',
-      country: null,
-      termsAndConditions: false,
-    },
-    onSubmit: (a) => {
-      console.log('submit', a);
-    },
-  });
+    };
+  }, [email]);
+
+  const { errors, formData, handleChange, handleSubmit, resetForm } =
+    useForm(memoed);
   return (
     <main>
+      <button
+        onClick={() => setEmail('ranndom@email.com')}
+        className="px-3 py-1 rounded bg-blue-300"
+      >
+        set Email
+      </button>
       <form onSubmit={handleSubmit}>
         <FormInput
           type="email"
